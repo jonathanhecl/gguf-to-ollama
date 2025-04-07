@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	version = "1.0.2"
+	version = "1.0.3"
 )
 
 func main() {
@@ -26,14 +26,16 @@ func main() {
 	context := 0
 
 	if len(os.Args) > 2 {
-		for i := range os.Args {
+		for i := 2; i < len(os.Args); i++ {
 			if strings.HasPrefix(os.Args[i], "-context=") {
 				context, _ = strconv.Atoi(os.Args[i][len("-context="):])
-			} else {
+			} else if len(os.Args[i]) > 0 {
 				name = os.Args[i]
 			}
 		}
-	} else {
+	}
+
+	if len(name) == 0 {
 		name = filepath.Base(ggufFile)
 		ext := filepath.Ext(name)
 		name = name[:len(name)-len(ext)]
