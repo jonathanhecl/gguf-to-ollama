@@ -15,6 +15,9 @@ var GGUF_STOP_TAGS []string = []string{
 	"<s>", "</s>",
 	"<start_of_turn>", "<end_of_turn>",
 	"<|im_start|>", "<|im_end|>",
+	"<|start_header_id|>", "<|end_header_id|>",
+	"<|eot_id|>",
+	"<|reserved_special_token",
 }
 
 func GetGGUFStops(filename string) ([]string, error) {

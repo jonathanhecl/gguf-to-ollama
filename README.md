@@ -7,9 +7,9 @@ Importing GGUF to Ollama made easy
 - Automatic STOP detection
 
 ## Requirements
-- Ollama
+- [Ollama](https://ollama.com/)
 
-## STOP supported tags
+## STOP tags supported
 ```
 [INST] ... [/INST]
 [SYSTEM_PROMPT] ... [/SYSTEM_PROMPT]
@@ -19,6 +19,9 @@ Importing GGUF to Ollama made easy
 <s> ... </s>
 <start_of_turn> ... <end_of_turn>
 <|im_start|> ... <|im_end|>
+<|start_header_id|> ... <|end_header_id|>
+<|eot_id|>
+<|reserved_special_token
 ```
 
 ## Usage
@@ -34,9 +37,14 @@ gguf_to_ollama <gguf-file> [<name>] [-context=65536]
 	Name of the model (optional)
 
 -context
-	Context size fixed (optional)
+	Context size fixed (optional, default by ollama: 2048)
 ```
 
+## Modelfile
+
+If modelfile already exists, it will not be overwritten.
+
+You can edit the modelfile manually. [Documentation](https://github.com/ollama/ollama/blob/main/docs/modelfile.md)
 
 ## License
 
@@ -44,5 +52,4 @@ gguf_to_ollama <gguf-file> [<name>] [-context=65536]
 
 ## Links
 
-- [Ollama](https://ollama.com/)
 - [Releases](https://github.com/jonathanhecl/gguf-to-ollama/releases/)
