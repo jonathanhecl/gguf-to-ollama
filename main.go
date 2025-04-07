@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -54,15 +55,42 @@ func main() {
 
 	fmt.Println("STOP detected: ", strings.Join(stops, ", "))
 
-	modelfile := fmt.Sprintf("FROM \"%s\"\n", ggufFile)
-	for _, stop := range stops {
-		modelfile += fmt.Sprintf("PARAMETER stop %s\n", stop)
+	modelFilePath := ggufFile + ".modelfile"
+
+	if _, err := os.Stat(modelFilePath); err == nil {
+		fmt.Println("Modelfile already exists:", modelFilePath)
+	} else {
+		modelfile := fmt.Sprintf("FROM \"%s\"\n", ggufFile)
+		for _, stop := range stops {
+			modelfile += fmt.Sprintf("PARAMETER stop %s\n", stop)
+		}
+		if context > 0 {
+			modelfile += fmt.Sprintf("PARAMETER num_ctx %d\n", context)
+		}
+		fmt.Printf("Modelfile:\n----------\n%s\n----------\n", modelfile)
+
+		if err := os.WriteFile(modelFilePath, []byte(modelfile), 0644); err != nil {
+			fmt.Printf("Error saving modelfile: %v\n", err)
+			return
+		}
+		fmt.Printf("Modelfile saved to: %s\n", modelFilePath)
 	}
 
-	if context > 0 {
-		modelfile += fmt.Sprintf("PARAMETER num_ctx %d\n", context)
+	fmt.Println() // break
+
+	if _, err := os.Stat(modelFilePath); err == nil {
+		fmt.Println("Creating model on Ollama...")
+		fmt.Println("This may take a while...")
+
+		cmd := exec.Command("ollama", "create", name, "-f", modelFilePath)
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			fmt.Printf("Error creating model: %v\n", err)
+			fmt.Printf("Command output: %s\n", string(output))
+			return
+		}
+
+		fmt.Printf("Model created successfully!\n")
+		fmt.Printf("Output: %s\n", string(output))
 	}
-
-	fmt.Printf("Modelfile:\n----------\n%s\n----------\n", modelfile)
-
 }
