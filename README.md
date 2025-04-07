@@ -19,5 +19,15 @@ Importing GGUF to Ollama made easy
 
 ## Usage
 ```bash
-gguf_to_ollama <gguf-file> [<name>]
+gguf_to_ollama <gguf-file> [<name>] [-context=65536]
+
+<gguf-file>
+	GGUF file to convert to Ollama Modelfile
+
+<name>
+	Name of the model (optional)
+
+-context
+	Context size fixed (optional)
+
 ```

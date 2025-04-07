@@ -15,7 +15,7 @@ func main() {
 	fmt.Println("gguf-to-ollama v", version)
 
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: gguf-to-ollama <gguf-file> [<name>]")
+		fmt.Println("Usage: gguf-to-ollama <gguf-file> [<name>] [-context=65536]")
 		return
 	}
 
@@ -43,9 +43,11 @@ func main() {
 
 	fmt.Println("STOP detected: ", strings.Join(stops, ", "))
 
-	modelfile := fmt.Sprintf(`FROM "%s"\n`, ggufFile)
+	modelfile := fmt.Sprintf("FROM \"%s\"\n", ggufFile)
 	for _, stop := range stops {
 		modelfile += fmt.Sprintf("PARAMETER stop %s\n", stop)
 	}
+
+	fmt.Printf("Modelfile:\n----------\n%s\n----------\n", modelfile)
 
 }
