@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -19,11 +20,18 @@ func main() {
 		return
 	}
 
-	name := ""
 	ggufFile := os.Args[1]
+	name := ""
+	context := 0
 
 	if len(os.Args) > 2 {
-		name = os.Args[2]
+		for i := range os.Args {
+			if strings.HasPrefix(os.Args[i], "-context=") {
+				context, _ = strconv.Atoi(os.Args[i][len("-context="):])
+			} else {
+				name = os.Args[i]
+			}
+		}
 	} else {
 		name = filepath.Base(ggufFile)
 		ext := filepath.Ext(name)
@@ -34,6 +42,9 @@ func main() {
 
 	fmt.Println("GGUF ", ggufFile)
 	fmt.Println("Name ", name)
+	if context > 0 {
+		fmt.Println("Context: ", context)
+	}
 
 	stops, err := GetGGUFStops(ggufFile)
 	if err != nil {
@@ -46,6 +57,10 @@ func main() {
 	modelfile := fmt.Sprintf("FROM \"%s\"\n", ggufFile)
 	for _, stop := range stops {
 		modelfile += fmt.Sprintf("PARAMETER stop %s\n", stop)
+	}
+
+	if context > 0 {
+		modelfile += fmt.Sprintf("PARAMETER num_ctx %d\n", context)
 	}
 
 	fmt.Printf("Modelfile:\n----------\n%s\n----------\n", modelfile)
