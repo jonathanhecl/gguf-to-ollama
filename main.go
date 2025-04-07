@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
+	"strings"
 )
 
 var (
@@ -24,9 +25,27 @@ func main() {
 	if len(os.Args) > 2 {
 		name = os.Args[2]
 	} else {
-		name = ggufFile[:len(ggufFile)-len(path.Ext(ggufFile))]
+		name = filepath.Base(ggufFile)
+		ext := filepath.Ext(name)
+		name = name[:len(name)-len(ext)]
 	}
+
+	fmt.Println() // break
 
 	fmt.Println("GGUF ", ggufFile)
 	fmt.Println("Name ", name)
+
+	stops, err := GetGGUFStops(ggufFile)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println("STOP detected: ", strings.Join(stops, ", "))
+
+	modelfile := fmt.Sprintf(`FROM "%s"\n`, ggufFile)
+	for _, stop := range stops {
+		modelfile += fmt.Sprintf("PARAMETER stop %s\n", stop)
+	}
+
 }
