@@ -16,7 +16,9 @@ var GGUF_STOP_TAGS []string = []string{
 	"<start_of_turn>", "<end_of_turn>",
 	"<|im_start|>", "<|im_end|>",
 	"<|start_header_id|>", "<|end_header_id|>",
-	"<|eot_id|>",
+	"<|begin▁of▁sentence|>", "<|end▁of▁sentence|>",
+	"<|User|>", "<|Assistant|>",
+	"<|eot_id|>", "<|im_sep|>",
 	"<|reserved_special_token",
 }
 

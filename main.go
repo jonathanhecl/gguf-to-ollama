@@ -62,7 +62,7 @@ func main() {
 	} else {
 		modelfile := fmt.Sprintf("FROM \"%s\"\n", ggufFile)
 		for _, stop := range stops {
-			modelfile += fmt.Sprintf("PARAMETER stop %s\n", stop)
+			modelfile += fmt.Sprintf("PARAMETER stop \"%s\"\n", stop)
 		}
 		if context > 0 {
 			modelfile += fmt.Sprintf("PARAMETER num_ctx %d\n", context)
