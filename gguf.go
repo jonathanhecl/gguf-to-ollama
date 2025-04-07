@@ -15,7 +15,6 @@ var GGUF_STOP_TAGS []string = []string{
 	"<<SYS>>", "<</SYS>>",
 	"<s>", "</s>",
 	"<start_of_turn>", "<end_of_turn>",
-	"s", "",
 	"<|start_header_id|>", "<|end_header_id|>",
 	"<｜begin▁of▁sentence｜>", "<｜begin▁of▁sentence｜>",
 	"<｜User｜>", "<｜Assistant｜>",

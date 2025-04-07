@@ -19,7 +19,6 @@ Importing GGUF to Ollama made easy
 <<SYS>> ... <</SYS>>
 <s> ... </s>
 <start_of_turn> ... <end_of_turn>
-<s> ... </s>
 <|start_header_id|> ... <|end_header_id|>
 <｜begin▁of▁sentence｜> ... <｜begin▁of▁sentence｜>
 <｜User｜>
