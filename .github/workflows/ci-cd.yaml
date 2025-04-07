@@ -1,0 +1,119 @@
+name: CI/CD
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  GOVERSION: "1.23"
+  NAME: "gguf-to-ollama"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GOVERSION }}
+      - name: Test
+        run: go test -v ./...
+
+  build_linux:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GOVERSION }}
+      - name: Build for Linux
+        run: GOOS=linux GOARCH=amd64 go build -o ${{ env.NAME }}-linux64 .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-binaries
+          path: ${{ env.NAME }}-linux64
+
+  build_windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GOVERSION }}
+      - name: Build for Windows
+        run: |
+          set GOOS=windows
+          set GOARCH=amd64
+          go build -o ${{ env.NAME }}-win64.exe .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-binaries
+          path: ${{ env.NAME }}-win64.exe
+
+  build_macos_arm64:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GOVERSION }}
+      - name: Build for macOS ARM64
+        run: GOOS=darwin GOARCH=arm64 go build -o ${{ env.NAME }}-macos-arm64 .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-arm64-binaries
+          path: ${{ env.NAME }}-macos-arm64
+
+  build_macos_amd64:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GOVERSION }}
+      - name: Build for macOS AMD64
+        run: GOOS=darwin GOARCH=amd64 go build -o ${{ env.NAME }}-macos-amd64 .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-amd64-binaries
+          path: ${{ env.NAME }}-macos-amd64
+
+  release:
+    needs: [build_linux, build_windows, build_macos_arm64, build_macos_amd64]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-binaries
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-binaries
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-arm64-binaries
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-amd64-binaries
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ env.NAME }}-linux64
+            ${{ env.NAME }}-win64.exe
+            ${{ env.NAME }}-macos-arm64
+            ${{ env.NAME }}-macos-amd64
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}

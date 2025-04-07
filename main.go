@@ -41,10 +41,10 @@ func main() {
 
 	fmt.Println() // break
 
-	fmt.Println("GGUF ", ggufFile)
-	fmt.Println("Name ", name)
+	fmt.Println("GGUF File : ", ggufFile)
+	fmt.Println("Name : ", name)
 	if context > 0 {
-		fmt.Println("Context: ", context)
+		fmt.Println("Context : ", context)
 	}
 
 	stops, err := GetGGUFStops(ggufFile)
@@ -53,7 +53,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("STOP detected: ", strings.Join(stops, ", "))
+	fmt.Println("STOP detected : ", strings.Join(stops, ", "))
 
 	modelFilePath := ggufFile + ".modelfile"
 
