@@ -16,6 +16,7 @@ Importing GGUF to Ollama made easy
 [AVAILABLE_TOOLS] ... [/AVAILABLE_TOOLS]
 [TOOL_RESULTS] ... [/TOOL_RESULTS]
 [TOOL_CALL] ... [/TOOL_CALL]
+<<SYS>> ... <</SYS>>
 <s> ... </s>
 <start_of_turn> ... <end_of_turn>
 <s> ... </s>
