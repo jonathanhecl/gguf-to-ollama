@@ -18,6 +18,7 @@ var GGUF_STOP_TAGS []string = []string{
 	"<|start_header_id|>", "<|end_header_id|>",
 	"<｜begin▁of▁sentence｜>", "<｜begin▁of▁sentence｜>",
 	"<｜User｜>", "<｜Assistant｜>",
+	"<|im_start|>", "<|im_end|>",
 	"<|eot_id|>", "<|im_sep|>",
 	"<|reserved_special_token",
 }
@@ -57,5 +58,21 @@ func GetGGUFStops(filename string) ([]string, error) {
 		}
 	}
 
+	stopTags = removeDuplicates(stopTags)
+
 	return stopTags, nil
+}
+
+func removeDuplicates(slice []string) []string {
+	unique := make(map[string]bool)
+	result := []string{}
+
+	for _, item := range slice {
+		if _, ok := unique[item]; !ok {
+			unique[item] = true
+			result = append(result, item)
+		}
+	}
+
+	return result
 }
