@@ -10,14 +10,15 @@ import (
 )
 
 var (
-	version = "1.0.3"
+	version = "1.0.4"
 )
 
 func main() {
 	fmt.Println("gguf-to-ollama v", version)
 
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: gguf-to-ollama <gguf-file> [<name>] [-context=65536]")
+		fmt.Println("Usage: gguf-to-ollama <gguf-file> [<name>] [-context=SIZE]")
+		fmt.Println("Context suggestions: [4096, 8192, 16384, 32768, 65536, 151654, 262144, 524288, 1048576]")
 		return
 	}
 
