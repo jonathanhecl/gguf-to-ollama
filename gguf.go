@@ -22,6 +22,13 @@ var GGUF_STOP_TAGS []string = []string{
 	"<|reserved_special_token",
 }
 
+var GGUF_PACKAGE map[string][]string = map[string][]string{
+	"qwen2": []string{
+		"<|im_start|>",
+		"<|im_end|>",
+	},
+}
+
 func GetGGUFStops(filename string) ([]string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -41,6 +48,12 @@ func GetGGUFStops(filename string) ([]string, error) {
 	for _, tag := range GGUF_STOP_TAGS {
 		if strings.Contains(string(buf[:n]), tag) {
 			stopTags = append(stopTags, tag)
+		}
+	}
+
+	for code, tags := range GGUF_PACKAGE {
+		if strings.Contains(string(buf[:n]), code) {
+			stopTags = append(stopTags, tags...)
 		}
 	}
 
